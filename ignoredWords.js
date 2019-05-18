@@ -15,7 +15,8 @@ const ignoredWords = [
   'he',
   'her',
   'he',
-  'his'
+  'his',
+  'as',
 ];
 
 module.exports = { ignoredWords };

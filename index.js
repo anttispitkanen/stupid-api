@@ -20,22 +20,10 @@ const { RAPIDAPI_KEY, RAPIDAPI_HOST } = process.env;
   const words = extractWords(description, ignoredWords);
   console.log(words); // FIXME:
   console.log();
-  console.log(replaceWords(description, words));
+  // console.log(replaceWords(description, words));
 
-  console.log(await createSynonyms(words));
+  // console.log(await createSynonyms(words));
 })();
-
-async function fetchSentenceFromWikipedia(lang, queryTerm) {
-  const response = await axios.get(
-    `https://${lang}.wikipedia.org/w/api.php?action=opensearch&redirects=resolve&search=${encodeURIComponent(
-      queryTerm
-    )}`
-  );
-  const { data } = response;
-  const description = data && data[2] && data[2][0];
-  const link = data && data[3] && data[3][0];
-  return { description, link };
-}
 
 function extractWords(text, ignoredWordArray) {
   return text
@@ -48,13 +36,13 @@ function extractWords(text, ignoredWordArray) {
     );
 }
 
-function replaceWords(text, wordArray) {
-  let textToReturn = text;
-  wordArray.forEach(
-    word => (textToReturn = textToReturn.replace(word, 'KISSE'))
-  );
-  return textToReturn;
-}
+// function replaceWords(text, wordArray) {
+//   let textToReturn = text;
+//   wordArray.forEach(
+//     word => (textToReturn = textToReturn.replace(word, 'KISSE'))
+//   );
+//   return textToReturn;
+// }
 
 /**
  * Fetch synonyms for each word given
@@ -79,8 +67,8 @@ async function fetchSynonyms(word) {
     {
       headers: {
         'x-RapidAPI-Host': RAPIDAPI_HOST,
-        'x-RapidAPI-Key': RAPIDAPI_KEY
-      }
+        'x-RapidAPI-Key': RAPIDAPI_KEY,
+      },
     }
   );
   const { data } = response;
