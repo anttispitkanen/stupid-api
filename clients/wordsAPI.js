@@ -3,6 +3,14 @@ const { ignoredWords } = require('../ignoredWords');
 
 const { RAPIDAPI_KEY, RAPIDAPI_HOST } = process.env;
 
+// exit if key and host not specified
+if (!RAPIDAPI_KEY || !RAPIDAPI_HOST) {
+  console.error(
+    'No RAPIDAPI_KEY and/or RAPIDAPI_HOST in env (forgot to source .env?)'
+  );
+  process.exit(1);
+}
+
 function extractWords(text) {
   return text
     .split(/\W/)
