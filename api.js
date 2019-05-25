@@ -2,6 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const wikipediaClient = require('./clients/wikipedia');
 const wordsAPIClient = require('./clients/wordsAPI');
+const knex = require('./db');
+
+async function runMigrations() {
+  try {
+    await knex.migrate.latest();
+    console.log('migrated knex');
+  } catch (err) {
+    console.error('Failed to run migrations');
+    throw err;
+  }
+}
 
 const app = express();
 
@@ -42,4 +53,25 @@ app.post('/synonymize', async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log('Listening on port 3001 :DD'));
+async function start() {
+  await runMigrations();
+  console.log('migrations completed');
+
+  app.listen(3001, () => console.log('Listening on port 3001 :DD'));
+
+  process.on('SIGTERM', async () => {
+    console.log('Received SIGTERM, shutting down');
+    await knex.destroy();
+    process.exit(0);
+  });
+  process.on('SIGINT', async () => {
+    console.log('Received SIGINT, shutting down');
+    await knex.destroy();
+    process.exit(0);
+  });
+}
+
+start().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
